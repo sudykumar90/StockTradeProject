@@ -3,7 +3,9 @@ import urllib as urls
 import re
 import json
 import matplotlib.pyplot as plt
+import os
 
+os.mkdir('AllPrice')
 
 def movingaverage(values, window):
     weights = np.repeat(1.0, window) / window
