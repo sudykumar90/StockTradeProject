@@ -5,7 +5,8 @@ import json
 import matplotlib.pyplot as plt
 import os
 
-os.mkdir('AllPrice')
+if not os.path.exists('AllPrice'):
+    os.mkdir('AllPrice')
 
 def movingaverage(values, window):
     weights = np.repeat(1.0, window) / window
@@ -19,15 +20,17 @@ def data1D(stock):
         allfile1D = open('AllPrice/'+symbol+'1D.txt', 'w+')
         allfile1D.close()
 
-        htmltext1D = urls.urlopen('http://www.bloomberg.com/markets/chart/data/1D/'+symbol+':US')
-        data1D = json.load(htmltext1D)
-        datapoints1D = data1D["data_values"]
+        htmltext1D = urls.urlopen('http://chartapi.finance.yahoo.com/instrument/1.0/' + stock + '/chartdata;type=quote;range=1d/csv').read()
+        data1D = htmltext1D.split('\n')
 
-        allfile1D = open('AllPrice/' +symbol+ '1D.txt', 'a')
-
-        for point in datapoints1D:
-            allfile1D.write(str(symbol) + ',' + str(point[0]) + ',' + str(point[1]) + '\n')
-        allfile1D.close()
+        for line1D in data1D:
+             splitline1D = line1D.split(',')
+             if len(splitline1D) == 6:
+                if 'values' not in line1D:
+                    allfile1D = open('AllPrice/' + symbol + '1D.txt', 'a')
+                    linestowrite1D = line1D + '\n'
+                    allfile1D.write(str(symbol) + ',' + linestowrite1D)
+                    allfile1D.close()
 
 #1 month
 
@@ -37,15 +40,17 @@ def data1M(stock):
         allfile1M = open('AllPrice/'+symbol+'1M.txt', 'w+')
         allfile1M.close()
 
-        htmltext1M = urls.urlopen('http://www.bloomberg.com/markets/chart/data/1M/'+symbol+':US')
-        data1M = json.load(htmltext1M)
-        datapoints1M = data1M["data_values"]
+        htmltext1M = urls.urlopen('http://chartapi.finance.yahoo.com/instrument/1.0/' + stock + '/chartdata;type=quote;range=1m/csv').read()
+        data1M = htmltext1M.split('\n')
 
-        allfile1M = open('AllPrice/' +symbol+ '1M.txt', 'a')
-
-        for point in datapoints1M:
-            allfile1M.write(str(symbol) + ',' + str(point[0]) + ',' + str(point[1]) + '\n')
-        allfile1M.close()
+        for line1M in data1M:
+             splitline1M = line1M.split(',')
+             if len(splitline1M) == 6:
+                if 'values' not in line1M:
+                    allfile1M = open('AllPrice/' + symbol + '1M.txt', 'a')
+                    linestowrite1M = line1M + '\n'
+                    allfile1M.write(str(symbol) + ',' + linestowrite1M)
+                    allfile1M.close()
 
 # 1 Year
 
@@ -55,15 +60,17 @@ def data1Y(stock):
         allfile1Y = open('AllPrice/'+symbol+'1Y.txt', 'w+')
         allfile1Y.close()
 
-        htmltext1Y = urls.urlopen('http://www.bloomberg.com/markets/chart/data/1Y/'+symbol+':US')
-        data1Y = json.load(htmltext1Y)
-        datapoints1Y = data1Y["data_values"]
+        htmltext1Y = urls.urlopen('http://chartapi.finance.yahoo.com/instrument/1.0/' + stock + '/chartdata;type=quote;range=1y/csv').read()
+        data1Y = htmltext1Y.split('\n')
 
-        allfile1Y = open('AllPrice/' +symbol+ '1Y.txt', 'a')
-
-        for point in datapoints1Y:
-            allfile1Y.write(str(symbol) + ',' + str(point[0]) + ',' + str(point[1]) + '\n')
-        allfile1Y.close()
+        for line1Y in data1Y:
+             splitline1Y = line1Y.split(',')
+             if len(splitline1Y) == 6:
+                if 'values' not in line1Y:
+                    allfile1Y = open('AllPrice/' + symbol + '1Y.txt', 'a')
+                    linestowrite1Y = line1Y + '\n'
+                    allfile1Y.write(str(symbol) + ',' + linestowrite1Y)
+                    allfile1Y.close()
 
 #plot
 def plot(stock):
