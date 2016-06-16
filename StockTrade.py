@@ -3,6 +3,7 @@ import urllib as urls
 import re
 import json
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdate
 import os
 
 if not os.path.exists('AllPrice'):
@@ -81,7 +82,7 @@ def plot(stock):
         #name1D = pd.read_csv('AllPrice/' + symbol + '1D.txt')
         stocks1D = tuple(datas1D[:,][:,2])
         time1D = datas1D[:, ][:, 1]
-        time1D = time1D - time1D[0]
+        time1D = (time1D - time1D[0])/1000
         MV11D = int(len(stocks1D) * 0.01)
         MV21D = int(len(stocks1D) * 0.025)
 
@@ -106,7 +107,7 @@ def plot(stock):
         stock1D = datas1D[:, ][:, 2]
 
         # 1M plot
-        datas1M = np.genfromtxt('AllPrice/'+symbol+'1M.txt', delimiter=',')
+        datas1M = np.genfromtxt('AllPrice/'+symbol+'1M.txt', delimiter=',', converters={1: mdate.strpdate2num('%Y%m%d')})
         #name1M = pd.read_csv('AllPrice/'+symbol+'1M.txt')
         stocks1M = tuple(datas1M[:,][:,2])
         time1M = datas1M[:, ][:, 1]
@@ -133,7 +134,7 @@ def plot(stock):
         stock1M = datas1M[:, ][:, 2]
 
         # 1Y plot
-        datas1Y = np.genfromtxt('AllPrice/'+symbol+'1Y.txt', delimiter=',')
+        datas1Y = np.genfromtxt('AllPrice/'+symbol+'1Y.txt', delimiter=',', converters={1: mdate.strpdate2num('%Y%m%d')})
         #name1Y = pd.read_csv('AllPrice/'+symbol+'1Y.txt')
         stocks1Y = tuple(datas1Y[:,][:,2])
         time1Y = datas1Y[:, ][:, 1]
