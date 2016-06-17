@@ -219,6 +219,16 @@ def plot(stock):
         plt.ylabel('StockPrice',color='w')
         plt.title(symbol+ ' Stock Price 1 Day',color='w')
 
+        fig1vol = fig1.twinx()
+        fig1vol.bar(time1D[-SP1D1:],volume1D[-SP1D1:], color='b', width=0.1, align='center')
+        fig1vol.set_xlim(xmin=0)
+        volume1D = datas1D[:, ][:, 6]
+        fig1vol.set_ylim(0, 2.5 * volume1D.max())
+        fig1vol.spines['bottom'].set_color('w')
+        fig1vol.spines['top'].set_color('w')
+        fig1vol.spines['left'].set_color('w')
+        fig1vol.spines['right'].set_color('w')
+
         mvavgplot11M = str(MV11M) + ' MA'
         mvavgplot21M = str(MV21M) + ' MA'
 
@@ -239,6 +249,16 @@ def plot(stock):
         plt.ylabel('StockPrice',color='w')
         plt.title(symbol + ' Stock Price 1 Month',color='w')
 
+        fig2vol = fig2.twinx()
+        fig2vol.bar(time1M[-SP1M1:],volume1M[-SP1M1:], color='b', width=0.5, align='center')
+        fig2vol.set_xlim(xmin=0)
+        volume1M = datas1M[:, ][:, 6]
+        fig2vol.set_ylim(0, 5 * volume1M.max())
+        fig2vol.spines['bottom'].set_color('w')
+        fig2vol.spines['top'].set_color('w')
+        fig2vol.spines['left'].set_color('w')
+        fig2vol.spines['right'].set_color('w')
+
 
         mvavgplot11Y = str(MV11Y) + ' MA'
         mvavgplot21Y = str(MV21Y) + ' MA'
@@ -254,10 +274,21 @@ def plot(stock):
         fig3.spines['right'].set_color('w')
         fig3.tick_params(axis='x',colors='w')
         fig3.tick_params(axis='y', colors='w')
-        plt.legend(loc=9,ncol=2, prop={'size':8})
+        plt.legend(loc=9, ncol=2, prop={'size': 8})
         plt.xlabel('TimeFrame',color='w')
         plt.ylabel('StockPrice',color='w')
         plt.title(symbol + ' Stock Price 1 Year',color='w')
+
+        fig3vol = fig3.twinx()
+        fig3vol.bar(time1Y[-SP1Y1:],volume1Y[-SP1Y1:], color='b', width=1, align='center')
+        fig3vol.set_xlim(xmin=0)
+        volume1Y = datas1Y[:, ][:, 6]
+        fig3vol.set_ylim(0, 4 * volume1Y.max())
+        fig3vol.spines['bottom'].set_color('w')
+        fig3vol.spines['top'].set_color('w')
+        fig3vol.spines['left'].set_color('w')
+        fig3vol.spines['right'].set_color('w')
+
         plt.subplots_adjust(left=0.1,bottom=0.08,right=0.97,top=0.94,wspace=0.25,hspace=0.34)
         plt.show()
 
