@@ -4,7 +4,7 @@ import re
 import json
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdate
-from matplotlib.finance import candlestick_ohlc as cndl
+from matplotlib.finance import candlestick_ochl as cndl
 import os
 
 if not os.path.exists('AllPrice'):
@@ -89,7 +89,7 @@ def plot(stock):
         time1D = datas1D[:, ][:, 1]
         time1D = (time1D - time1D[0])/1000
         MV11D = int(len(close1D) * 0.01)
-        MV21D = int(len(close1D) * 0.025)
+        MV21D = int(len(close1D) * 0.05)
 
         start1D=0
         end1D=len(close1D)
@@ -129,7 +129,7 @@ def plot(stock):
         time1M = datas1M[:, ][:, 1]
         time1M = time1M - time1M[0]
         MV11M = int(len(close1M) * 0.01)
-        MV21M = int(len(close1M) * 0.025)
+        MV21M = int(len(close1M) * 0.05)
 
         start1M = 0
         end1M = len(close1M)
@@ -169,7 +169,7 @@ def plot(stock):
         time1Y = datas1Y[:, ][:, 1]
         time1Y = time1Y - time1Y[0]
         MV11Y = int(len(close1Y) * 0.01)
-        MV21Y = int(len(close1Y) * 0.025)
+        MV21Y = int(len(close1Y) * 0.05)
 
         start1Y = 0
         end1Y = len(close1Y)
@@ -201,11 +201,11 @@ def plot(stock):
         mvavgplot11D = str(MV11D) + ' MA'
         mvavgplot21D = str(MV21D) + ' MA'
 
-        fig = plt.figure(facecolor='black')
-        fig1 = fig.add_subplot(2,2,1, axisbg='black')
-        cndl(fig1, candlesticks1D, width=0.025, colorup='g', colordown='r')
-        fig1.plot(time1D[-SP1D1:], mv3stock1D1[-SP1D1:], 'r-', label=mvavgplot11D)
-        fig1.plot(time1D[-SP1D2:], mv3stock1D2[-SP1D2:], 'g-', label=mvavgplot21D)
+        fig = plt.figure(facecolor='k')
+        fig1 = fig.add_subplot(2,2,1, axisbg='k')
+        cndl(fig1, candlesticks1D[-SP1D1:], width=0.1,  colorup='forestgreen', colordown='maroon')
+        fig1.plot(time1D[-SP1D1:], mv3stock1D1[-SP1D1:], 'silver', label=mvavgplot11D, linewidth = 1.5)
+        fig1.plot(time1D[-SP1D2:], mv3stock1D2[-SP1D2:], 'gold', label=mvavgplot21D, linewidth = 1.5)
         fig1.set_xlim(xmin=0)
         fig1.grid(True, color='w')
         fig1.spines['bottom'].set_color('w')
@@ -214,28 +214,19 @@ def plot(stock):
         fig1.spines['right'].set_color('w')
         fig1.tick_params(axis='x',colors='w')
         fig1.tick_params(axis='y', colors='w')
-        plt.legend(loc=9,ncol=2, prop={'size':8})
+        fig1Leg = plt.legend(loc=9,ncol=2, prop={'size':8})
+        fig1Leg.get_frame().set_alpha(0.5)
         plt.xlabel('TimeFrame', color='w')
         plt.ylabel('StockPrice',color='w')
         plt.title(symbol+ ' Stock Price 1 Day',color='w')
 
-        fig1vol = fig1.twinx()
-        fig1vol.bar(time1D[-SP1D1:],volume1D[-SP1D1:], color='b', width=0.1, align='center')
-        fig1vol.set_xlim(xmin=0)
-        volume1D = datas1D[:, ][:, 6]
-        fig1vol.set_ylim(0, 2.5 * volume1D.max())
-        fig1vol.spines['bottom'].set_color('w')
-        fig1vol.spines['top'].set_color('w')
-        fig1vol.spines['left'].set_color('w')
-        fig1vol.spines['right'].set_color('w')
-
         mvavgplot11M = str(MV11M) + ' MA'
         mvavgplot21M = str(MV21M) + ' MA'
 
-        fig2 = fig.add_subplot(2,2,2, axisbg='black')
-        cndl(fig2, candlesticks1M, width=0.1, colorup='g', colordown='r')
-        fig2.plot(time1M[-SP1M1:],mv3stock1M1[-SP1M1:] , 'r-',label=mvavgplot11M)
-        fig2.plot(time1M[-SP1M2:],mv3stock1M2[-SP1M2:], 'g-',label=mvavgplot21M)
+        fig2 = fig.add_subplot(2,2,2, axisbg='k')
+        cndl(fig2, candlesticks1M[-SP1M1:], width=0.3, colorup='forestgreen', colordown='maroon')
+        fig2.plot(time1M[-SP1M1:],mv3stock1M1[-SP1M1:] , 'silver',label=mvavgplot11M, linewidth = 1.5)
+        fig2.plot(time1M[-SP1M2:],mv3stock1M2[-SP1M2:], 'gold',label=mvavgplot21M, linewidth = 1.5)
         fig2.set_xlim(xmin=0)
         fig2.grid(True, color='w')
         fig2.spines['bottom'].set_color('w')
@@ -244,29 +235,20 @@ def plot(stock):
         fig2.spines['right'].set_color('w')
         fig2.tick_params(axis='x',colors='w')
         fig2.tick_params(axis='y', colors='w')
-        plt.legend(loc=9,ncol=2, prop={'size':8})
+        fig2Leg = plt.legend(loc=9,ncol=2, prop={'size':8})
+        fig2Leg.get_frame().set_alpha(0.5)
         plt.xlabel('TimeFrame',color='w')
         plt.ylabel('StockPrice',color='w')
         plt.title(symbol + ' Stock Price 1 Month',color='w')
 
-        fig2vol = fig2.twinx()
-        fig2vol.bar(time1M[-SP1M1:],volume1M[-SP1M1:], color='b', width=0.5, align='center')
-        fig2vol.set_xlim(xmin=0)
-        volume1M = datas1M[:, ][:, 6]
-        fig2vol.set_ylim(0, 5 * volume1M.max())
-        fig2vol.spines['bottom'].set_color('w')
-        fig2vol.spines['top'].set_color('w')
-        fig2vol.spines['left'].set_color('w')
-        fig2vol.spines['right'].set_color('w')
-
-
         mvavgplot11Y = str(MV11Y) + ' MA'
         mvavgplot21Y = str(MV21Y) + ' MA'
-        fig3 = fig.add_subplot(2,1,2, axisbg='black')
-        cndl(fig3, candlesticks1Y, width=0.5, colorup='g', colordown='r')
-        fig3.plot(time1Y[-SP1Y1:],mv3stock1Y1[-SP1Y1:] , 'r-',label=mvavgplot11Y)
-        fig3.plot(time1Y[-SP1Y2:], mv3stock1Y2[-SP1Y2:], 'g-',label=mvavgplot21Y)
+        fig3 = fig.add_subplot(2,1,2, axisbg='k')
+        cndl(fig3, candlesticks1Y[-SP1Y1:], width=1,  colorup='forestgreen', colordown='maroon')
+        fig3.plot(time1Y[-SP1Y1:],mv3stock1Y1[-SP1Y1:] , 'silver',label=mvavgplot11Y, linewidth = 1.5)
+        fig3.plot(time1Y[-SP1Y2:], mv3stock1Y2[-SP1Y2:], 'gold',label=mvavgplot21Y, linewidth = 1.5)
         fig3.set_xlim(xmin=0)
+        #fig3.set_xlim(xmax=len(time1Y))
         fig3.grid(True, color = 'w')
         fig3.spines['bottom'].set_color('w')
         fig3.spines['top'].set_color('w')
@@ -274,16 +256,18 @@ def plot(stock):
         fig3.spines['right'].set_color('w')
         fig3.tick_params(axis='x',colors='w')
         fig3.tick_params(axis='y', colors='w')
-        plt.legend(loc=9, ncol=2, prop={'size': 8})
+        fig3Leg = plt.legend(loc=9, ncol=2, prop={'size': 8})
+        fig3Leg.get_frame().set_alpha(0.5)
         plt.xlabel('TimeFrame',color='w')
         plt.ylabel('StockPrice',color='w')
         plt.title(symbol + ' Stock Price 1 Year',color='w')
 
         fig3vol = fig3.twinx()
-        fig3vol.bar(time1Y[-SP1Y1:],volume1Y[-SP1Y1:], color='b', width=1, align='center')
+        fig3vol.fill_between(time1Y[-SP1Y1:],volume1Y[-SP1Y1:], facecolor='teal')
         fig3vol.set_xlim(xmin=0)
+        #fig3vol.set_xlim(xmax=len(time1Y))
         volume1Y = datas1Y[:, ][:, 6]
-        fig3vol.set_ylim(0, 4 * volume1Y.max())
+        fig3vol.set_ylim(0, 4.5 * volume1Y.max())
         fig3vol.spines['bottom'].set_color('w')
         fig3vol.spines['top'].set_color('w')
         fig3vol.spines['left'].set_color('w')
