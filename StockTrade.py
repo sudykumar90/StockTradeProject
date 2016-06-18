@@ -5,6 +5,7 @@ import json
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdate
 from matplotlib.finance import candlestick_ochl as cndl
+from matplotlib.offsetbox import AnchoredText
 import os
 
 if not os.path.exists('AllPrice'):
@@ -117,6 +118,8 @@ def plot(stock):
         SP1D2 = len(time1D[MV21D - 1:])
 
         close1D = datas1D[:, ][:, 2]
+
+
 
         # 1M plot
         datas1M = np.genfromtxt('AllPrice/'+symbol+'1M.txt', delimiter=',', converters={1: mdate.strpdate2num('%Y%m%d')})
@@ -271,10 +274,37 @@ def plot(stock):
         fig3vol.set_xlim(xmax=(time1Y[len(time1Y)-1])+5)
         volume1Y = datas1Y[:, ][:, 6]
         fig3vol.set_ylim(0, 4.5 * volume1Y.max())
+        fig3vol.axes.get_yaxis().set_ticks ([])
         fig3vol.spines['bottom'].set_color('w')
         fig3vol.spines['top'].set_color('w')
         fig3vol.spines['left'].set_color('w')
         fig3vol.spines['right'].set_color('w')
+
+        stats = 'Current Stock Price for  %s :\n' \
+                'Open :  %.2f\n' \
+                'Close :  %.2f\n' \
+                'High  :  %.2f\n' \
+                'Low   :  %.2f'\
+                %(symbol, (open1D[len(open1D) - 2]), close1D[len(open1D) - 2], high1D[len(open1D) - 2], low1D[len(open1D) - 2])
+        anc = AnchoredText(stats, loc= 1, pad=0.5, borderpad= 0, prop=dict(size=11, color='w'))
+        anc.patch.set_facecolor(color='k')
+        anc.patch.set_edgecolor(color='w')
+        fig3.add_artist(anc)
+
+        if abs((mv3stock1D2[(len(mv3stock1D2) - 2)])-(mv3stock1D1[(len(mv3stock1D1) - 2)])) < 0.5:
+            if abs((mv3stock1M2[(len(mv3stock1M2) - 2)])-(mv3stock1M1[(len(mv3stock1M1) - 2)])) < 0.5:
+                if abs((mv3stock1Y2[(len(mv3stock1Y2) - 2)]) - (mv3stock1Y1[(len(mv3stock1Y1) - 2)])) < 0.5:
+                    anc = AnchoredText('Ready To sell!!!', loc= 2, pad=0.5, borderpad=0, prop=dict(size=11, color='g'))
+                    anc.patch.set_facecolor(color='k')
+                    anc.patch.set_edgecolor(color='w')
+                    fig3.add_artist(anc)
+                else:
+                    anc = AnchoredText('Not Ready To Sell!!!', loc= 2, pad=0.5, borderpad=0, prop=dict(size=11, color='r'))
+                    anc.patch.set_facecolor(color='k')
+                    anc.patch.set_edgecolor(color='w')
+                    fig3.add_artist(anc)
+
+
 
         plt.subplots_adjust(left=0.1,bottom=0.08,right=0.97,top=0.94,wspace=0.25,hspace=0.34)
         plt.show()
