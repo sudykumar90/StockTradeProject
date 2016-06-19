@@ -1,5 +1,5 @@
 import numpy as np
-import urllib as urls
+from urllib.request import urlopen
 import re
 import json
 import matplotlib.pyplot as plt
@@ -16,6 +16,11 @@ def movingaverage(values, window):
     smas = np.convolve(values, weights, 'valid')
     return smas
 
+def bytedate2num(fmt):
+    def converter(b):
+        return mdate.strpdate2num(fmt)(b.decode('ascii'))
+    return converter
+
 # 1 day
 def data1D(stock):
     list1D = stock.split('\n')
@@ -23,7 +28,7 @@ def data1D(stock):
         allfile1D = open('AllPrice/'+symbol+'1D.txt', 'w+')
         allfile1D.close()
 
-        htmltext1D = urls.urlopen('http://chartapi.finance.yahoo.com/instrument/1.0/' + stock + '/chartdata;type=quote;range=1d/csv').read()
+        htmltext1D = urlopen('http://chartapi.finance.yahoo.com/instrument/1.0/' + stock + '/chartdata;type=quote;range=1d/csv').read().decode()
         data1D = htmltext1D.split('\n')
 
         for line1D in data1D:
@@ -43,7 +48,7 @@ def data1M(stock):
         allfile1M = open('AllPrice/'+symbol+'1M.txt', 'w+')
         allfile1M.close()
 
-        htmltext1M = urls.urlopen('http://chartapi.finance.yahoo.com/instrument/1.0/' + stock + '/chartdata;type=quote;range=1m/csv').read()
+        htmltext1M = urlopen('http://chartapi.finance.yahoo.com/instrument/1.0/' + stock + '/chartdata;type=quote;range=1m/csv').read().decode()
         data1M = htmltext1M.split('\n')
 
         for line1M in data1M:
@@ -63,7 +68,7 @@ def data1Y(stock):
         allfile1Y = open('AllPrice/'+symbol+'1Y.txt', 'w+')
         allfile1Y.close()
 
-        htmltext1Y = urls.urlopen('http://chartapi.finance.yahoo.com/instrument/1.0/' + stock + '/chartdata;type=quote;range=1y/csv').read()
+        htmltext1Y = urlopen('http://chartapi.finance.yahoo.com/instrument/1.0/' + stock + '/chartdata;type=quote;range=1y/csv').read().decode()
         data1Y = htmltext1Y.split('\n')
 
         for line1Y in data1Y:
@@ -122,7 +127,7 @@ def plot(stock):
 
 
         # 1M plot
-        datas1M = np.genfromtxt('AllPrice/'+symbol+'1M.txt', delimiter=',', converters={1: mdate.strpdate2num('%Y%m%d')})
+        datas1M = np.genfromtxt('AllPrice/'+symbol+'1M.txt', delimiter=',', converters={ 1: bytedate2num('%Y%m%d')})
         #name1M = pd.read_csv('AllPrice/'+symbol+'1M.txt')
         close1M = tuple(datas1M[:,][:,2])
         high1M = tuple(datas1M[:,][:,3])
@@ -162,7 +167,7 @@ def plot(stock):
         close1M = datas1M[:, ][:, 2]
 
         # 1Y plot
-        datas1Y = np.genfromtxt('AllPrice/'+symbol+'1Y.txt', delimiter=',', converters={1: mdate.strpdate2num('%Y%m%d')})
+        datas1Y = np.genfromtxt('AllPrice/'+symbol+'1Y.txt', delimiter=',', converters={ 1: bytedate2num('%Y%m%d')})
         #name1Y = pd.read_csv('AllPrice/'+symbol+'1Y.txt')
         close1Y = tuple(datas1Y[:,][:,2])
         high1Y = tuple(datas1Y[:,][:,3])
@@ -311,7 +316,7 @@ def plot(stock):
 
 
 while True:
-    stock = raw_input('Please Input Stock: ')
+    stock = input('Please Input Stock: ')
     data1D(stock)
     data1M(stock)
     data1Y(stock)
